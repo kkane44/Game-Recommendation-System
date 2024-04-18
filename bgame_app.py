@@ -11,7 +11,7 @@ import pickle
 import streamlit as st
 
 # Load data
-@st.cache(suppress_st_warning=True)
+@st.cache_data
 def load_data():
   df = pd.read_csv('bgg_dataset.csv', sep=';')
   return df
@@ -27,7 +27,7 @@ df['Mechanics'] = df['Mechanics'].fillna('Not Specified')
 df['Domains'] = df['Domains'].fillna('Not Specified')
 
 #clean text columns
-@st.cache(suppress_st_warning=True)
+@st.cache_data
 def Cleaned_text(text):
   clean = re.sub('[^a-zA-Z0-9 ,]', '', str(text))  # substitute any character not in the character list with empty string
   clean = clean.replace("/", ",")  #replace '/' with ','
@@ -63,7 +63,7 @@ all_titles = df['Name'].values
 
 #create content-based recommendation algorithm using similarity score
 #find similar game titles
-@st.cache(suppress_st_warning=True)
+@st.cache_data
 def find_similar_titles(input_title, all_titles=all_titles):
     similar_titles = []
     for title in all_titles:
@@ -71,7 +71,7 @@ def find_similar_titles(input_title, all_titles=all_titles):
             similar_titles.append(title)
     return similar_titles
 
-@st.cache(suppress_st_warning=True)
+@st.cache_data
 def recommendations1(name, cosine_similarity_matrix = cosine_similarity_matrix):
   name_lower = name.lower()
   game_found = name_lower in df['Name'].str.lower().values
@@ -89,7 +89,7 @@ def recommendations1(name, cosine_similarity_matrix = cosine_similarity_matrix):
 
   return df[['Name', 'Year Published', 'Rating Average', 'Complexity Average', 'Domains', 'Mechanics', 'ID']].iloc[item_indices]  #return title recommendations
 
-@st.cache(suppress_st_warning=True)
+@st.cache_data
 def bg_recommendation(name):
   exclusions = find_similar_titles(name) # find similar titles
   recs = recommendations1(name)
